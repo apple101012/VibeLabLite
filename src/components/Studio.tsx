@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabaseClient'
 import Toolbar from './Toolbar'
-import Timeline from './Timeline'
+import TimelineEditor from './TimelineEditor'
 import LyricsPanel from './LyricsPanel'
 import EffectsPanel from './EffectsPanel'
 import MigrationNotice from './MigrationNotice'
@@ -137,12 +137,7 @@ export default function Studio({ session }: StudioProps) {
 
         {/* Timeline Section */}
         <div className="flex-1 flex flex-col">
-          <Timeline 
-            projectId={currentProjectId}
-            userId={session.user.id}
-            isPlaying={isPlaying}
-            isRecording={isRecording}
-          />
+          <TimelineEditor />
         </div>
 
         {/* Lyrics Panel (Right Side) */}

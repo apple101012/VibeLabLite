@@ -145,3 +145,18 @@ All tables enforce user-level access via `auth.uid()`.
 6. Implement actual audio effects with Tone.js
 7. Add waveform visualization with WaveSurfer.js
 8. Test all core features end-to-end
+
+## Recent Changes (latest)
+
+- Integrated waveform support (`src/lib/waveform.ts`, `src/components/Waveform.tsx`).
+- Region editing: added left/right trim handles and pointer-based resizing that dispatches `TRIM_REGION`.
+- Added `DELETE_TRACK` action and delete button in `TrackEditor`.
+- Exposed global helpers for mute/solo/volume/reorder/delete to maintain existing UI patterns.
+
+## Current Status
+
+- Core UI (Timeline, Tracks, Regions) is functional; play/stop and basic recording are implemented.
+- AudioEngine scheduling and recording helpers are present; waveform rendering works for regions with `AudioBuffer`.
+- Pending: Undo/Redo, advanced effects processing, import pipeline to populate `Region.buffer`, persistent clipboard UX.
+
+---

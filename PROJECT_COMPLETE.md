@@ -1,4 +1,4 @@
-# 🎵 VibeLab - Project Complete!
+![1763356412801](image/PROJECT_COMPLETE/1763356412801.png)![1763356415676](image/PROJECT_COMPLETE/1763356415676.png)# 🎵 VibeLab - Project Complete!
 
 ## ✅ What's Been Built
 

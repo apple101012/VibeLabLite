@@ -183,3 +183,40 @@ VibeLab/
 - Ready for local testing after Supabase setup
 - Ready for deployment to Vercel/Netlify
 - Future enhancements: keyboard shortcuts, export, real audio effects
+
+### 2025-11-17 (assistant) — Waveform + Region trim + Delete track
+
+What changed:
+
+- Added waveform utility and canvas renderer to visualize per-region waveforms.
+- Integrated waveform into `Region` tiles and added left/right trim handles with pointer interactions.
+- Implemented `DELETE_TRACK` action in the central project store and exposed a delete button in `TrackEditor`.
+- Exposed window helper `__vibelab_delete_track` and ensured TimelineEditor maps it to dispatch.
+
+Why:
+
+- Waveform rendering is a core DAW feature for visual editing; trimming and track deletion are essential editing operations.
+- Providing both window helpers and direct dispatch paths keeps existing UI patterns compatible.
+
+Files added/edited:
+
+- `src/lib/waveform.ts` — computePeaks implementation
+- `src/components/Waveform.tsx` — canvas waveform renderer
+- `src/components/Region.tsx` — integrated waveform, added resize handles, TRIM_REGION dispatches, debug logs
+- `src/components/TrackEditor.tsx` — added delete button wired to window helper or dispatch
+- `src/components/TimelineEditor.tsx` — exposed `__vibelab_delete_track` helper and cleaned up lifecycle
+- `src/state/projectStore.tsx` — added `DELETE_TRACK` action and reducer handling
+
+How to verify:
+
+1. Start the dev server with `npm run dev`.
+2. Open the studio and ensure tracks render with regions.
+3. If a region has an AudioBuffer, it should show a waveform; otherwise a placeholder bar appears.
+4. Drag the left/right handles on a region to trim and observe `[DEBUG][Region]:` and `[DEBUG][ProjectStore]:` logs.
+5. Click `Del` on a track to remove it; observe `[DEBUG][Track]:` and `[DEBUG][ProjectStore]: delete_track` logs.
+
+Notes / Next:
+
+- Trim UX may require snapping and constraints; next iteration will refine UX and guard against negative durations.
+- Waveform rendering currently assumes region.buffer is present for recorded/imported audio; importing pipeline should populate `buffer` for persisted assets.
+- Will implement undo/redo for edit actions and a persistent clipboard for copy/paste across sessions.
