@@ -1,0 +1,185 @@
+---
+applyTo: '**'
+---
+
+User instruction (keep this at the top):
+
+The file `changelog.txt` is a persistent project log and living documentation. Always update this file whenever you (the assistant) make changes to the project codebase, database schema, routes, or architecture. Include a short summary of what changed, why, files edited, and any steps needed to verify the change. Keep entries chronological with timestamps. Always keep this header at the top.
+
+---
+
+## Project Snapshot (Initial Seed)
+
+**Project:** VibeLab
+**Purpose:** A fast, browser-based music creation platform focused on vocal production. Allows users to drag in beats, record vocals, apply vocal effects, write lyrics, and export finished songs.
+
+**Stack:**
+- Frontend: React 18 + TypeScript + Vite
+- Styling: TailwindCSS (custom dark theme with cyan accents)
+- Backend: Supabase (Auth, Database, Storage)
+- Audio: Tone.js + Web Audio API
+- Export: FFmpeg WASM
+
+**Architecture:**
+- Single-page application (SPA)
+- Supabase client-side SDK for auth and data
+- Row Level Security (RLS) for data protection
+- Storage buckets for audio files organized by user
+
+---
+
+## Database Schema
+
+### Tables
+
+**projects**
+- id (UUID, PK)
+- user_id (UUID, FK → auth.users)
+- name (TEXT)
+- lyrics (TEXT, nullable)
+- bpm (INTEGER, default: 140)
+- key (TEXT, default: 'C')
+- created_at (TIMESTAMP WITH TIME ZONE)
+- updated_at (TIMESTAMP WITH TIME ZONE)
+
+**tracks**
+- id (UUID, PK)
+- project_id (UUID, FK → projects)
+- type (TEXT, CHECK: 'beat' | 'vocal')
+- file_path (TEXT)
+- position (REAL, default: 0)
+- effects (JSONB, nullable)
+- created_at (TIMESTAMP WITH TIME ZONE)
+
+### RLS Policies
+All tables have RLS enabled. Users can only access their own data via `auth.uid()` checks.
+
+---
+
+## Storage Buckets
+
+**projects**
+- Structure: `{userId}/{projectId}/beats/` and `{userId}/{projectId}/vocals/`
+- Access: Private, RLS policies enforce user-level access
+- File types: audio/* (mp3, wav, webm, etc.)
+
+---
+
+## Directory Structure
+
+```
+VibeLab/
+├── src/
+│   ├── components/
+│   │   ├── Auth.tsx           # Login/signup component
+│   │   ├── Studio.tsx         # Main studio container
+│   │   ├── Toolbar.tsx        # Top toolbar with controls
+│   │   ├── Timeline.tsx       # Beat/vocal tracks timeline
+│   │   ├── LyricsPanel.tsx    # Right-side lyrics editor
+│   │   └── EffectsPanel.tsx   # Left-side effects controls
+│   ├── lib/
+│   │   └── supabaseClient.ts  # Supabase client instance
+│   ├── types/
+│   │   └── database.ts        # TypeScript database types
+│   ├── App.tsx                # Main app component
+│   ├── main.tsx               # React entry point
+│   └── index.css              # Tailwind + custom styles
+├── supabase/
+│   └── migrations/
+│       ├── 001_create_schema.sql   # Database tables & RLS
+│       └── 002_create_storage.sql  # Storage buckets & policies
+├── package.json
+├── vite.config.ts
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+---
+
+## Change Log
+
+### 2025-01-16 (Initial Project Setup)
+
+**What changed:**
+- Created complete VibeLab project structure
+- Implemented React + Vite + TypeScript frontend
+- Set up TailwindCSS with dark theme and cyan accents
+- Created Supabase client configuration
+- Built authentication system (email/password + Google OAuth)
+- Designed and implemented all core UI components
+- Set up database schema with RLS policies
+- Created storage buckets with access policies
+
+**Why:**
+- Initialize the VibeLab project per PRD specifications
+- Establish foundation for vocal-focused music studio
+
+**Files added/edited:**
+- `package.json` - Project dependencies
+- `vite.config.ts` - Vite configuration with FFmpeg headers
+- `tailwind.config.js` - Custom dark theme colors
+- `src/index.css` - Dark theme styles and component classes
+- `src/lib/supabaseClient.ts` - Supabase client setup
+- `src/types/database.ts` - TypeScript types for database
+- `src/App.tsx` - Main application entry
+- `src/components/Auth.tsx` - Authentication UI
+- `src/components/Studio.tsx` - Main studio interface
+- `src/components/Toolbar.tsx` - Control toolbar
+- `src/components/Timeline.tsx` - Audio tracks timeline
+- `src/components/LyricsPanel.tsx` - Lyrics editor
+- `src/components/EffectsPanel.tsx` - Vocal effects controls
+- `supabase/migrations/001_create_schema.sql` - Database tables
+- `supabase/migrations/002_create_storage.sql` - Storage setup
+
+**How to verify:**
+1. Run `npm install` to install dependencies
+2. Create `.env.local` with Supabase credentials
+3. Run `npm run dev` to start development server
+4. Visit http://localhost:5173
+5. Sign up/sign in functionality should work
+6. Studio interface should display with all components
+
+**Notes / Next:**
+- Need to set up Supabase project and run migrations
+- Need to implement keyboard shortcuts
+- Need to add export functionality (MP3/WAV/.vibeproject)
+- Need to implement actual audio effects processing
+- Future: AI features (key detection, vocal enhancement, lyric generation)
+
+---
+
+### 2025-01-16 (Documentation and Setup Scripts)
+
+**What changed:**
+- Created comprehensive documentation suite
+- Added setup automation scripts for Windows and Linux/Mac
+- Fixed TypeScript warnings
+- Finalized project for deployment
+
+**Why:**
+- Make it easy for users to get started
+- Provide deployment guidance
+- Ensure clean codebase
+
+**Files added/edited:**
+- `README.md` - Project overview, features, quick start
+- `SETUP.md` - Detailed setup instructions with Supabase configuration
+- `DEPLOY.md` - Deployment guide for Vercel, Netlify, and self-hosting
+- `changelog.txt` - Living documentation and change log
+- `current.txt` - Current project state snapshot
+- `.env.example` - Environment variables template
+- `setup.ps1` - Windows PowerShell setup script
+- `setup.sh` - Linux/Mac Bash setup script
+- `src/components/Timeline.tsx` - Fixed unused variable warning
+
+**How to verify:**
+1. Run `.\setup.ps1` (Windows) or `./setup.sh` (Linux/Mac)
+2. Follow the interactive setup prompts
+3. Environment file should be created
+4. Dependencies should install automatically
+5. Read documentation files for clarity
+
+**Notes / Next:**
+- Ready for local testing after Supabase setup
+- Ready for deployment to Vercel/Netlify
+- Future enhancements: keyboard shortcuts, export, real audio effects

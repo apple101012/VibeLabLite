@@ -1,0 +1,147 @@
+Project: VibeLab
+Purpose: A fast, browser-based music creation platform focused on vocal production, allowing users to instantly drag in beats, record vocals, apply effects, write lyrics, and export finished songs.
+
+## Stack
+
+- **Frontend:** React 18 + TypeScript + Vite
+- **Styling:** TailwindCSS (dark theme, cyan accents)
+- **Backend:** Supabase (Auth, Postgres, Storage)
+- **Audio:** Tone.js + Web Audio API
+- **Export:** FFmpeg WASM (planned)
+
+## Runtime / Config
+
+### Environment Variables
+Required in `.env.local`:
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anon/public key
+
+### Commands
+- `npm install` - Install dependencies
+- `npm run dev` - Start development server (port 5173)
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+## Database / Schema
+
+### Tables
+
+**projects** (User music projects)
+- id, user_id, name, lyrics, bpm, key, created_at, updated_at
+
+**tracks** (Beat and vocal tracks)
+- id, project_id, type ('beat'|'vocal'), file_path, position, effects (JSONB), created_at
+
+### RLS Policies
+All tables enforce user-level access via `auth.uid()`.
+
+## Storage
+
+**Bucket:** projects (private)
+- Path structure: `{userId}/{projectId}/beats/` and `/vocals/`
+- Stores all uploaded beats and recorded vocals
+
+## Interactions / UI
+
+### Authentication
+- Email/password signup and login
+- Google OAuth integration
+- Session persisted via Supabase
+
+### Studio Interface
+**Toolbar (Top)**
+- Project name input
+- Record button (R key)
+- Play/Pause button (Space key)
+- Stop button (S key)
+- Effects toggle
+- Save button (Ctrl+S)
+- Sign Out button
+
+**Timeline (Center)**
+- Beat track upload area (drag-and-drop or click)
+- Vocal tracks display
+- Waveform visualization (planned)
+
+**Effects Panel (Left, collapsible)**
+- Autotune strength slider
+- Reverb amount
+- Compression presets (Light/Medium/Heavy)
+- 3-band EQ (Low/Mid/High)
+- Noise reduction toggle
+
+**Lyrics Panel (Right)**
+- Text editor for writing lyrics
+- Auto-saves to project
+- Cyan-themed with custom scrollbar
+
+### Keyboard Shortcuts (Planned)
+- `R` - Record
+- `Space` - Play/Pause
+- `S` - Stop
+- `Ctrl+S` - Save
+- `Ctrl+Z` - Undo
+- `Ctrl+Shift+Z` - Redo
+- `Ctrl+I` - Import Beat
+- `Ctrl+N` - New Track
+- `L` - Toggle Lyrics Panel
+- `+/-` - Zoom In/Out
+- `M` - Mute
+- `Shift+M` - Solo
+
+## Features Implemented
+
+✅ User authentication (email/password + Google)
+✅ Project creation and management
+✅ Beat upload to Supabase Storage
+✅ Vocal recording via Web Audio API
+✅ Lyrics editor with auto-save
+✅ Effects panel UI (sliders and controls)
+✅ Dark theme with cyan accent colors
+✅ Responsive toolbar with transport controls
+✅ Database schema with RLS policies
+✅ Storage buckets with security policies
+
+## Features Pending
+
+❌ Keyboard shortcuts implementation
+❌ Export functionality (MP3, WAV, .vibeproject)
+❌ Actual audio effects processing (Autotune, Reverb, etc.)
+❌ Waveform visualization
+❌ Undo/Redo functionality
+❌ Track mute/solo
+❌ Grid snapping
+❌ Zoom controls
+❌ Real-time monitoring
+❌ Multiple vocal track management
+❌ Drag-and-drop beat import
+
+## Future AI Features
+
+🔮 AI key detection
+🔮 AI vocal enhancement
+🔮 AI lyric generation
+🔮 AI harmonic doubling
+🔮 AI auto-mix
+🔮 AI beat matching
+
+## Known Limitations
+
+- Effects are UI-only; actual audio processing not implemented yet
+- No waveform visualization
+- No undo/redo stack
+- Keyboard shortcuts not connected
+- Export requires FFmpeg WASM integration
+- Single beat track limitation
+- No multi-track vocal mixing
+
+## Next Intended Work
+
+1. Install all npm dependencies
+2. Set up Supabase project and run migrations
+3. Configure environment variables
+4. Implement keyboard shortcuts
+5. Add FFmpeg WASM for export
+6. Implement actual audio effects with Tone.js
+7. Add waveform visualization with WaveSurfer.js
+8. Test all core features end-to-end
